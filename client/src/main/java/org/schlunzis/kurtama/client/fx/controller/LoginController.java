@@ -5,10 +5,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -21,6 +20,7 @@ import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
+import org.schlunzis.kurtama.client.util.I18n;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,11 +29,15 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Locale;
+
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class LoginController {
+
+    private final I18n i18n;
 
     public static final String NOT_CONNECTED_STYLE = "not_connected";
     public static final String CONNECTED_STYLE = "connected";
@@ -46,15 +50,35 @@ public class LoginController {
     private final ISessionService sessionService;
     private final IUserSettings userSettings;
 
+    // LOGIN FIELDS
+    @FXML
+    private Label emailLabel;
     @FXML
     private TextField emailField;
     @FXML
+    private Label passwordLabel;
+    @FXML
     private PasswordField passwordField;
+    @FXML
+    private Button registerButton;
+    @FXML
+    private Button loginButton;
 
+    @FXML
+    private ComboBox<Locale> languageSelector;
+
+
+    // SERVER CONNECTION FIELDS
+    @FXML
+    private Label serverLabel;
     @FXML
     private TextField serverField;
     @FXML
+    private Label portLabel;
+    @FXML
     private TextField portField;
+    @FXML
+    private Button connectButton;
     @FXML
     private Region progressIndicator;
     @FXML
@@ -115,7 +139,41 @@ public class LoginController {
         applyConnectionStatus(sessionService.getConnectionStatus().getValue());
         serverField.setText(userSettings.getString(Setting.HOST));
         portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
+
         setVersion();
+
+        languageSelector.setItems(FXCollections.observableList(i18n.getSUPPORTED_LOCALES()));
+        languageSelector.setCellFactory(l -> createLocaleCell());
+        languageSelector.setButtonCell(createLocaleCell());
+        languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
+        languageSelector.getSelectionModel().select(i18n.getLocale());
+        createBindings();
+    }
+
+    private void createBindings() {
+        emailLabel.textProperty().bind(i18n.createBinding("login.label.email"));
+        passwordLabel.textProperty().bind(i18n.createBinding("login.label.password"));
+        registerButton.textProperty().bind(i18n.createBinding("login.button.register"));
+        loginButton.textProperty().bind(i18n.createBinding("login.button.login"));
+
+        serverLabel.textProperty().bind(i18n.createBinding("login.label.server"));
+        portLabel.textProperty().bind(i18n.createBinding("login.label.port"));
+        connectButton.textProperty().bind(i18n.createBinding("login.button.connect"));
+
+    }
+
+    private ListCell<Locale> createLocaleCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Locale item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getDisplayName(item));
+                }
+            }
+        };
     }
 
     private void devLogin() {

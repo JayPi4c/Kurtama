@@ -10,8 +10,8 @@
         <URL value="@css/settings.css"/>
     </stylesheets>
 
-    <Button text="Delete Account" GridPane.columnIndex="0" GridPane.rowIndex="0"
+    <Button text="%settings.button.delete" GridPane.columnIndex="0" GridPane.rowIndex="0"
             GridPane.columnSpan="2" onAction="#deleteAccount"/>
-    <Button text="Back" GridPane.columnIndex="0" GridPane.rowIndex="1"
+    <Button text="%settings.button.back" GridPane.columnIndex="0" GridPane.rowIndex="1"
             GridPane.columnSpan="2" onAction="#back"/>
 </GridPane>

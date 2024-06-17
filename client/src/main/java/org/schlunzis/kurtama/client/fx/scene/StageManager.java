@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientReadyEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.util.I18n;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class StageManager {
 
     private final ApplicationContext context;
+    private final I18n i18n;
     private Stage stage;
 
     @EventListener
@@ -35,6 +37,7 @@ public class StageManager {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(event.scene().getControllerClass().getResource(event.scene().getFxml()));
             loader.setControllerFactory(context::getBean);
+            loader.setResources(i18n.getResourceBundle());
             Parent parent = null;
             try {
                 parent = loader.load();
@@ -42,8 +45,7 @@ public class StageManager {
                 log.error("Error loading {}", event.scene().getFxml(), e);
             }
 
-            // TODO: read the correct title string for each the current locale
-            stage.setTitle("Kurtama-" + event.scene().getTitleKey());
+            stage.setTitle("Kurtama - " + i18n.i18n("title." + event.scene().getTitleKey()));
             Scene scene = new Scene(parent);
             stage.setScene(scene);
             stage.show();
