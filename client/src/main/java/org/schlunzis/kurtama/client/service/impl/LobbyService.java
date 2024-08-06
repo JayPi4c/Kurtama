@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.client.service.ILobbyService;
 import org.schlunzis.kurtama.common.ILobby;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.game.GameSettings;
+import org.schlunzis.kurtama.common.messages.game.client.StartGameRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,6 +17,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Getter
@@ -50,6 +54,17 @@ public class LobbyService implements ILobbyService {
         );
     }
 
+    @Override
+    public void startGame() {
+        currentLobby.ifPresent(lobby -> {
+            List<Collection<IUser>> teams = new ArrayList<>();
+            for (IUser user : lobby.getUsers()) {
+                teams.add(List.of(user));
+            }
+            eventBus.publishEvent(new StartGameRequest(lobby.getId(), new GameSettings(6, 8, teams)));
+        });
+    }
+
     @EventListener
     void onUserLeftLobbyMessage(UserLeftLobbyMessage ullm) {
         currentLobby = Optional.of(ullm.lobby());
@@ -58,7 +73,8 @@ public class LobbyService implements ILobbyService {
 
     @EventListener
     void onUserJoinedLobbyMessage(UserJoinedLobbyMessage ujlm) {
-        Platform.runLater(() -> lobbyUsersList.add(ujlm.joiningLobbyMember()));
+        currentLobby = Optional.of(ujlm.lobby());
+        Platform.runLater(() -> lobbyUsersList.setAll(ujlm.lobby().getUsers()));
     }
 
 

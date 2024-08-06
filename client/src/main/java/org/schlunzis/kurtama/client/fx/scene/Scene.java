@@ -18,7 +18,8 @@ public enum Scene {
     MAIN("main", MainMenuController.class, "main.fxml"),
     REGISTER("register", RegisterController.class, "register.fxml"),
     LOBBY("lobby", LobbyController.class, "lobby.fxml"),
-    SETTINGS("settings", SettingsController.class, "settings.fxml");
+    SETTINGS("settings", SettingsController.class, "settings.fxml"),
+    GAME("game", GameController.class, "game.fxml");
 
     /**
      * Contains the lookup key for the title of the scene.

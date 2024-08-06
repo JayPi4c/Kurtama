@@ -1,21 +1,19 @@
-package org.schlunzis.kurtama.common;
+package org.schlunzis.kurtama.common.game.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import org.schlunzis.kurtama.common.util.InheritanceTypeIdResolver;
 
-import java.util.UUID;
+import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "discriminator")
 @JsonTypeIdResolver(InheritanceTypeIdResolver.class)
-public interface IUser {
+public interface ITileDTO {
 
-    UUID getId();
+    int id();
 
-    String getUsername();
+    int[] neighbours();
 
-    void setUsername(String username);
-
-    UserDTO toDTO();
+    List<TeamDTO> figures();
 
 }

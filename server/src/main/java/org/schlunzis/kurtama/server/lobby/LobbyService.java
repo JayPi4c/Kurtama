@@ -50,7 +50,7 @@ public class LobbyService {
             ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), request.password(), cmc.getUser());
             cmc.respond(new JoinLobbySuccessfullyResponse(lobby.toDTO()));
 
-            var userJoinedLobbyMessage = new UserJoinedLobbyMessage(cmc.getUser().toDTO());
+            var userJoinedLobbyMessage = new UserJoinedLobbyMessage(lobby.toDTO());
             informUsersInLobby(userJoinedLobbyMessage, request.lobbyID(), cmc);
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {

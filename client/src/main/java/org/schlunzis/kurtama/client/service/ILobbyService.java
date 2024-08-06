@@ -14,4 +14,6 @@ public interface ILobbyService {
 
     void leaveLobby();
 
+    void startGame();
+
 }

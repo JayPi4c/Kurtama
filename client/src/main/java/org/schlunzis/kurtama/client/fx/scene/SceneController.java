@@ -8,6 +8,7 @@ import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSucce
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
+import org.schlunzis.kurtama.common.messages.game.server.GameStartedMessage;
 import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
@@ -55,6 +56,11 @@ public class SceneController {
     @EventListener
     public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN, SceneChangeMessage.USER_DELETED_SUCCESSFULLY));
+    }
+
+    @EventListener
+    public void onGameStartedMessage(GameStartedMessage gsm) {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.GAME));
     }
 
 }
