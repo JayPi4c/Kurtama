@@ -18,7 +18,6 @@ import org.controlsfx.control.NotificationPane;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
-import org.schlunzis.kurtama.client.fx.scene.events.NewStageEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
@@ -141,9 +140,9 @@ public class LoginController extends AbstractController {
         setVersion();
 
         languageSelector.setItems(FXCollections.observableList(i18n.getSUPPORTED_LOCALES()));
-        languageSelector.setCellFactory(_ -> createLocaleCell());
+        languageSelector.setCellFactory(l -> createLocaleCell());
         languageSelector.setButtonCell(createLocaleCell());
-        languageSelector.setOnAction(_ -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
+        languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
         languageSelector.getSelectionModel().select(i18n.getLocale());
         super.initNotificationPane();
     }
@@ -203,10 +202,6 @@ public class LoginController extends AbstractController {
         else
             version = "unknown version";
         versionLabel.setText(version);
-    }
-
-    public void createServer() {
-        eventBus.publishEvent(new NewStageEvent(Scene.CREATE_SERVER));
     }
 
 }
