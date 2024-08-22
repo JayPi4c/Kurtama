@@ -1,0 +1,40 @@
+name: Release to APT Repository
+
+on:
+  workflow_call:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  release-to-apt-repository:
+    name: Release to APT Repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        name: Download Client deb-Package
+        with:
+          name: client-deb
+      - name: Configure GPG key
+        run: |
+          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+    # - name: Download some previous releases
+          # TODO How can we do this?     
+      - name: generate metadata
+        run: |
+          ls
+          dpkg --version
+          dpkg-scanpackages --multiversion . > Packages
+          gzip -k -f Packages
+          apt-ftparchive release . > Release
+          gpg --default-key "ppa@schlunzis.org" -abs -o - Release > Release.gpg
+          gpg --default-key "ppa@schlunzis.org" --clearsign -o - Relaese > InRelease
+          gpg --armor --export "ppa@schlunzis.org" > KEY.gpg
+          echo "deb [signed-by=/etc/apt/trusted.gpg.d/kurtama.gpg] https://ppa.schlunzis.org/ubuntu ./" > kurtama.list
+          ls
+    # - name: Upload to FTP server
+        # TODO upload whole contents to server
+                

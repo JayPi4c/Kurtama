@@ -55,6 +55,15 @@ See [here](https://learn.microsoft.com/en-gb/windows/win32/msi/productversion) f
 
 This will create a .deb package and a .exe installer in the `target/jpackage-out` directory.
 
+### Adding the APT Repository to your system
+
+```bash
+curl -s --compressed "https://ppa.schlunzis.org/ubuntu/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/kurtama.gpg >/dev/null
+sudo curl -s --compressed -o /etc/apt/sources.list.d/kurtama.list "https://ppa.schlunzis.org/ubuntu/kurtama.list"
+sudo apt update
+```
+
+
 ### Docker
 
 The server might be build using Docker. You might use the provided image from the GitHub container registry or build it

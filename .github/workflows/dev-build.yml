@@ -44,3 +44,10 @@ jobs:
       tag: "v${{ needs.create-alpha-version-string.outputs.version }}"
       prerelease: true
     secrets: inherit
+    
+  release-to-apt-repo:
+    needs: build
+    uses: ./.github/workflows/release-to-apt-repository.yml
+    secrets: inherit
+
+        
