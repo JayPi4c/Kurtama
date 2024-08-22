@@ -33,7 +33,7 @@ jobs:
           gzip -k -f Packages
           apt-ftparchive release . > Release
           gpg --default-key "ppa@schlunzis.org" -abs -o - Release > Release.gpg
-          gpg --default-key "ppa@schlunzis.org" --clearsign -o - Relaese > InRelease
+          gpg --default-key "ppa@schlunzis.org" --clearsign -o - Release > InRelease
           gpg --armor --export "ppa@schlunzis.org" > KEY.gpg
           echo "deb [signed-by=/etc/apt/trusted.gpg.d/kurtama.gpg] https://ppa.schlunzis.org/ubuntu ./" > kurtama.list
           ls
