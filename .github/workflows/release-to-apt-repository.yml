@@ -37,6 +37,12 @@ jobs:
           gpg --armor --export "ppa@schlunzis.org" > KEY.gpg
           echo "deb [signed-by=/etc/apt/trusted.gpg.d/kurtama.gpg] https://ppa.schlunzis.org/ubuntu ./" > kurtama.list
           ls
-    # - name: Upload to FTP server
-        # TODO upload whole contents to server
-                
+      # https://github.com/marketplace/actions/ftp-deploy
+      #- name: 📂 Sync files
+      #  uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      #  with:
+      #    server: ppa.schlunzis.org
+      #    username: someUser
+      #    password: ${{ secrets.ftp_password }}
+      #    server-dir: /path/to/destination/on/server/
+      #    dangerous-clean-slate: false # maybe true required?
